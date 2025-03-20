@@ -39,17 +39,17 @@ async function chat(model, prompt) {
 app.post('/llama', async (req, res) => {
     console.log(req.body);
     const { prompt } = req.body;
-    const result = await chat(AI_MODEL.LLAMA, prompt);
-    console.log(result);
-    res.json(result);
+    const answer = await chat(AI_MODEL.LLAMA, prompt);
+    console.log(answer);
+    res.json({ answer });
 })
 
 app.post('/deepseek', async (req, res) => {
     console.log(req.body);
     const { prompt } = req.body;
-    const result = await chat(AI_MODEL.DEEPSEEK, prompt);
-    console.log(result);
-    res.json(result);
+    const answer = await chat(AI_MODEL.DEEPSEEK, prompt);
+    console.log(answer);
+    res.json({ answer });
 })
 
 app.listen(port, () => {
