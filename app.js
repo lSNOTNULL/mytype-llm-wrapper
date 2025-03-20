@@ -5,19 +5,51 @@ import express from 'express';
 import Together from 'together-ai';
 
 const app = express();
+app.use(express.json()); // body
+
 const port = 3000;
 
 const together = new Together();
 
-app.get('/', async (req, res) => {
+const AI_MODEL = Object.freeze({
+    LLAMA: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+    DEEPSEEK: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
+    GUARD: "meta-llama/Meta-Llama-Guard-3-8B"
+})
+
+async function chat(model, prompt) {
+    if (!prompt) {
+        throw new Error('Prompt is required!');
+    }
+    console.log(`prompt: ${prompt}`);
     const result = await together.chat.completions.create({
-        // https://api.together.xyz/models/meta-llama/Llama-3.3-70B-Instruct-Turbo-Free
-        model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
+        // https://api.together.xyz/models
+        model,
+        safety_model: AI_MODEL.GUARD,
         messages: [
-            { role: 'user', content: '오늘 저녁 메뉴 추천 좀' },
+            { role: "system", content: `don't use markdown, only use korean language and korean character. if Verify once again that you are using Hangul and delete it if it is not.` },
+            { role: 'user', content: prompt },
         ],
     });
-    res.json(result.choices[0].message.content);
+    console.log(result);
+    return result.choices[0].message.content;
+}
+
+// app.get('/', async (req, res) => {
+app.post('/llama', async (req, res) => {
+    console.log(req.body);
+    const { prompt } = req.body;
+    const result = await chat(AI_MODEL.LLAMA, prompt);
+    console.log(result);
+    res.json(result);
+})
+
+app.post('/deepseek', async (req, res) => {
+    console.log(req.body);
+    const { prompt } = req.body;
+    const result = await chat(AI_MODEL.DEEPSEEK, prompt);
+    console.log(result);
+    res.json(result);
 })
 
 app.listen(port, () => {
