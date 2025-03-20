@@ -1,9 +1,10 @@
 {
   "name": "mytype-llm-wrapper",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "start": "node server.js",
+    "test": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "together-ai": "^0.13.0"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }

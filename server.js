@@ -4,8 +4,8 @@ import Together from 'together-ai';
 
 dotenv.config(); // 환경 변수 로드
 
-const app = express();
-app.use(express.json()); // body 파싱을 위한 미들웨어 설정
+const server = express();
+server.use(express.json()); // body 파싱을 위한 미들웨어 설정
 
 const port = 3000; // 서버 포트 번호
 const together = new Together(); // Together API 클라이언트 인스턴스 생성
@@ -94,7 +94,7 @@ async function chatWithModel(model, prompt) {
 }
 
 // Llama 모델을 사용하여 채팅하는 엔드포인트
-app.post('/llama', async (req, res) => {
+server.post('/llama', async (req, res) => {
     console.log(req.body);
     const { prompt } = req.body;
     try {
@@ -107,7 +107,7 @@ app.post('/llama', async (req, res) => {
 });
 
 // DeepSeek 모델을 사용하여 채팅하는 엔드포인트
-app.post('/deepseek', async (req, res) => {
+server.post('/deepseek', async (req, res) => {
     console.log(req.body);
     const { prompt } = req.body;
     try {
@@ -129,7 +129,7 @@ app.post('/deepseek', async (req, res) => {
 });
 
 // Flux 모델을 사용하여 이미지를 생성하는 엔드포인트
-app.post('/flux', async (req, res) => {
+server.post('/flux', async (req, res) => {
     console.log(req.body);
     const { prompt } = req.body;
     try {
@@ -141,6 +141,6 @@ app.post('/flux', async (req, res) => {
 });
 
 // 서버 시작
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`서버가 포트 ${port}에서 실행 중입니다.`);
 });
