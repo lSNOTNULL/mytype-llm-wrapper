@@ -1,14 +1,12 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import Together from 'together-ai';
-
-dotenv.config(); // 환경 변수 로드
+require('dotenv').config(); // 환경 변수 로드
+const express = require('express');
+const { Together } = require('together-ai');
 
 const server = express();
 server.use(express.json()); // body 파싱을 위한 미들웨어 설정
 
 const port = 3000; // 서버 포트 번호
-const together = new Together(); // Together API 클라이언트 인스턴스 생성
+const together = new Together(process.env.TOGETHER_API_KEY); // Together API 클라이언트 인스턴스 생성
 
 // 사용 가능한 AI 모델 정의
 const AI_MODEL = Object.freeze({
