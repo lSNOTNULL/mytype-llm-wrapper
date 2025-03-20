@@ -16,51 +16,37 @@ const AI_MODEL = Object.freeze({
     DEEPSEEK: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
     GUARD: "meta-llama/Meta-Llama-Guard-3-8B",
     FLUX: "black-forest-labs/FLUX.1-schnell-Free",
-    STABLE_DIFFUSION: "stabilityai/stable-diffusion-xl-base-1.0"
+    // STABLE_DIFFUSION: "stabilityai/stable-diffusion-xl-base-1.0"
+    // 너! 유료인데 무료인척 했어? 그동안 고마웠어...
 });
 
-const IMAGE_RESPONSE_FORMAT = Object.freeze({
-    URL: "url",
-    B64: "base64",
-})
-
 async function image(model, prompt) {
+    const { IMAGE_MODE } = process.env;
+    console.log(IMAGE_MODE);
     function getStepsFromModel(model) {
         switch (model) {
             case AI_MODEL.FLUX:
                 return 4;
-            case AI_MODEL.STABLE_DIFFUSION:
-                return 40;
+                // return 1;
+            // case AI_MODEL.STABLE_DIFFUSION:
+            //     return 40;
+                // return 10;
             default:
                 throw new Error('Not implemented');
         }
     }
 
-    function getResponseFormatFromMode() {
-        switch (process.env.IMAGE_MODE) {
-            case "URL":
-                return IMAGE_RESPONSE_FORMAT.URL
-            case "B64":
-                return IMAGE_RESPONSE_FORMAT.B64;
-            default:
-                throw new Error('Not implemented');
-        }
+    const body ={
+        model,
+        prompt,
+        width: 1024,
+        height: 1024,
+        steps: getStepsFromModel(model),
+        n: 1
     }
 
-    const result = await together.images.create(
-        {
-            model,
-            prompt,
-            width: 1024,
-            height: 1024,
-            steps: getStepsFromModel(model),
-            n: 1,
-            seed: -1,
-            response_format: getResponseFormatFromMode(),
-        }
-    )
-
-    return result.data[0];
+    const result = await together.images.create(body)
+    return result.data[0].url;
 }
 
 async function chat(model, prompt) {
@@ -121,12 +107,12 @@ app.post('/deepseek', async (req, res) => {
     }
 });
 
-app.post('/stable_diffusion', async (req, res) => {
-    console.log(req.body);
-    const {prompt} = req.body;
-    const result = await image(AI_MODEL.STABLE_DIFFUSION, prompt);
-    res.json({result});
-});
+// app.post('/stable_diffusion', async (req, res) => {
+//     console.log(req.body);
+//     const {prompt} = req.body;
+//     const result = await image(AI_MODEL.STABLE_DIFFUSION, prompt);
+//     res.json({result});
+// });
 
 app.post('/flux', async (req, res) => {
     console.log(req.body);
