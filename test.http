@@ -1,5 +1,5 @@
 ### llama
-POST http://localhost:3000/llama
+POST https://intelligent-mirage-message.glitch.me/llama
 Content-Type: application/json
 
 {
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ### deepseek
-POST http://localhost:3000/deepseek
+POST https://intelligent-mirage-message.glitch.me/deepseek
 Content-Type: application/json
 
 {
